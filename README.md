@@ -1,6 +1,17 @@
 # FlowTracker
 
-A full-stack user analytics dashboard that tracks user interactions on a webpage, stores analytics data in MongoDB, and visualizes user behavior through session analytics, user journeys, and click heatmaps.
+A full-stack user analytics dashboard that tracks user interactions on a webpage, stores analytics data in MongoDB Atlas, and visualizes user behavior through session analytics, user journeys, and click heatmaps.
+
+---
+
+## Live Demo
+
+| Service | URL |
+|---|---|
+| Frontend (Vercel) | https://flow-tracker-nine.vercel.app |
+| Backend API (Render) | https://flowtracker-backend.onrender.com |
+
+FlowTracker is deployed as a full-stack application using Vercel for the frontend, Render for the backend API, and MongoDB Atlas for cloud database storage.
 
 ---
 
@@ -9,11 +20,12 @@ A full-stack user analytics dashboard that tracks user interactions on a webpage
 FlowTracker provides a lightweight analytics solution that captures user activity and presents actionable insights through an interactive dashboard.
 
 The application consists of:
-
 - A JavaScript tracking script that records user events
 - A Node.js + Express backend for data collection and querying
-- MongoDB for event storage
+- MongoDB Atlas for cloud event storage
 - A Next.js dashboard for analytics visualization
+
+The project is fully deployed with a Vercel frontend, Render backend, and MongoDB Atlas database.
 
 ---
 
@@ -22,7 +34,6 @@ The application consists of:
 ### Event Tracking
 
 The tracking script can be embedded into any webpage and records:
-
 - Page Views (`page_view`)
 - Click Events (`click`)
 
@@ -38,48 +49,47 @@ Each event includes:
 
 Session IDs are persisted using `localStorage` to maintain continuity across page visits.
 
----
-
 ### Sessions Dashboard
-
 - Lists all tracked sessions
 - Shows total event count per session
 - Click any session to inspect its complete activity history
 
----
-
 ### User Journey View
 
 Visualizes the chronological sequence of events for a selected session. Each event displays:
-
 - Event type
 - Page URL
 - Timestamp
 
 Allows reconstruction of the exact path a user followed while interacting with the website.
 
----
-
 ### Heatmap Visualization
 
 Displays click activity for tracked pages:
-
 - URL selection dropdown to switch between pages
 - Coordinate-based click rendering
 - Simple heatmap representation of user interaction patterns
 
----
-
 ### Demo Page
 
 A sample tracked webpage included to demonstrate:
-
 - Page view tracking
 - Click tracking
 - Session generation
 - Heatmap data collection
 
 The demo page allows quick end-to-end testing of the complete analytics pipeline.
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | Next.js, React, Tailwind CSS |
+| Backend | Node.js, Express.js |
+| Database | MongoDB Atlas, Mongoose |
+| Tracking | Vanilla JavaScript |
 
 ---
 
@@ -102,14 +112,14 @@ The demo page allows quick end-to-end testing of the complete analytics pipeline
 
 ---
 
-## Tech Stack
+## Deployment
 
-| Layer | Technology |
-|---|---|
-| Frontend | Next.js, React, Tailwind CSS |
-| Backend | Node.js, Express.js |
-| Database | MongoDB, Mongoose |
-| Tracking | Vanilla JavaScript |
+FlowTracker is deployed across three services:
+- **Frontend:** Next.js dashboard hosted on Vercel
+- **Backend:** Node.js + Express API hosted on Render
+- **Database:** MongoDB Atlas for persistent event storage
+
+The frontend communicates with the backend through a public API URL configured using environment variables, and the backend connects to MongoDB Atlas for storing and querying analytics events.
 
 ---
 
@@ -119,14 +129,15 @@ The demo page allows quick end-to-end testing of the complete analytics pipeline
 flowtracker/
 │
 ├── README-assets/
-│   ├── flowtracker_home.png
-│   ├── flowtracker_demo_page.png
-│   ├── flowtracker_sessions.png
-│   ├── flowtracker_user_journey.png
-│   └── flowtracker_heatmap.png
 │
 ├── backend/
-│   └── server.js
+│   ├── server.js
+│   ├── routes/
+│   ├── controllers/
+│   ├── models/
+│   └── config/
+│
+├── app/
 │
 ├── components/
 │   ├── SessionTable.jsx
@@ -143,6 +154,7 @@ flowtracker/
 ├── README.md
 ├── jsconfig.json
 ├── eslint.config.mjs
+├── package.json
 └── .gitignore
 ```
 
@@ -153,12 +165,11 @@ flowtracker/
 ### `POST /api/events`
 Stores a user interaction event.
 
-**Example payload:**
 ```json
 {
   "session_id": "session_xyz123",
   "event_type": "click",
-  "url": "http://localhost:3000/demo",
+  "url": "https://flow-tracker-nine.vercel.app/demo",
   "timestamp": "2026-06-22T12:00:00Z",
   "x": 42,
   "y": 68
@@ -189,8 +200,6 @@ Returns all tracked URLs available for heatmap visualization.
 
 ## Database Schema
 
-### Event
-
 ```js
 {
   session_id: String,
@@ -206,52 +215,72 @@ Returns all tracked URLs available for heatmap visualization.
 
 ## Setup Instructions
 
-### 1. Clone the Repository
-
+**1. Clone the repository**
 ```bash
 git clone https://github.com/qwerty12-ai/FlowTracker.git
 cd FlowTracker
 ```
 
-### 2. Install Frontend Dependencies
-
+**2. Install frontend dependencies**
 ```bash
 npm install
 ```
 
-### 3. Install Backend Dependencies
-
+**3. Install backend dependencies**
 ```bash
 cd backend
 npm install
 ```
 
-### 4. Configure Environment Variables
+**4. Configure environment variables**
 
-Create a `.env` file inside the `backend/` folder:
-
+Backend — create `backend/.env`:
 ```env
-MONGO_URI=your_mongodb_connection_string
+MONGO_URI=your_mongodb_atlas_connection_string
 PORT=5000
+FRONTEND_URL=http://localhost:3000
 ```
 
-### 5. Start the Backend
+Frontend — create `.env.local` in the project root:
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5000/api/events
+```
 
+**5. Start the backend**
 ```bash
 cd backend
 npm run dev
 ```
+Backend runs on `http://localhost:5000`
 
-Backend runs on: `http://localhost:5000`
-
-### 6. Start the Frontend
-
+**6. Start the frontend**
 ```bash
-# from the project root
 npm run dev
 ```
+Frontend runs on `http://localhost:3000`
 
-Frontend runs on: `http://localhost:3000`
+---
+
+## Production Deployment Notes
+
+For production deployment, FlowTracker uses:
+- **Vercel** for the frontend
+- **Render** for the backend API
+- **MongoDB Atlas** for the database
+
+**Frontend environment variables (Vercel)**
+```env
+NEXT_PUBLIC_API_URL=https://flowtracker-backend.onrender.com/api/events
+```
+
+**Backend environment variables (Render)**
+```env
+MONGO_URI=your_mongodb_atlas_connection_string
+FRONTEND_URL=https://flow-tracker-nine.vercel.app
+PORT=10000
+```
+
+The tracking script and frontend API layer were updated to remove hardcoded localhost URLs and support both local development and deployed production usage.
 
 ---
 
@@ -289,15 +318,14 @@ Frontend runs on: `http://localhost:3000`
 
 - Session persistence is handled using `localStorage` for simplicity.
 - Heatmap rendering uses coordinate plotting rather than an external visualization library.
-- Authentication was intentionally omitted to keep the assignment focused on analytics functionality.
-- The application is designed for demonstration purposes within the assignment scope.
-- The tracker script currently targets a locally running backend instance.
+- Authentication was intentionally omitted to keep the project focused on analytics functionality.
+- The application is designed for demonstration purposes.
+- The tracker script supports both local development and deployed production environments through environment-based API configuration.
 
 ---
 
 ## Future Improvements
 
-- Deploy frontend and backend to a cloud provider
 - Real-time event streaming
 - Advanced heatmap rendering with density gradients
 - Session duration analytics
