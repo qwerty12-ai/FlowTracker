@@ -1,5 +1,5 @@
 (function () {
-    const API_URL = "http://localhost:5000/api/events"
+    const API_URL = window.location.hostname === "localhost" ? "http://localhost:5000/api/events" : "https://your-render-backend-url/api/events"
     let sessionId = localStorage.getItem("flowtracker_session")
 
     if (!sessionId) {

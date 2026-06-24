@@ -6,10 +6,15 @@ const connectDB = require("./config/db")
 dotenv.config();
 connectDB();
 
-const app = express()
+const app = express();
+
+const allowedOrigins = [
+    "http://localhost:3000",
+    process.env.FRONTEND_URL,
+].filter(Boolean)
 
 app.use(express.json())
-app.use(cors())
+app.use(cors({origin: allowedOrigins, credentials: true}))
 app.use("/api/events", require("./routes/eventRoutes"))
 
 const port = process.env.PORT || 5000;

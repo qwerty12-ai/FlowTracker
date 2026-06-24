@@ -1,7 +1,7 @@
-const API_URL = "http://localhost:5000/api/events";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/events";
 
 export const getSessions = async () => {
-    const response = await fetch(`${API_URL}/sessions`)
+    const response = await fetch(`${API_URL}/sessions`,{cache: "no-store"})
     if (!response.ok) {
         console.error("get sessions request failed:", response.status, response.statusText)
         return []
@@ -10,7 +10,7 @@ export const getSessions = async () => {
 }
 
 export const getSessionEvents = async (sessionId) => {
-    const response = await fetch(`${API_URL}/session/${sessionId}`)
+    const response = await fetch(`${API_URL}/session/${sessionId}`,{cache: "no-store"})
     if (!response.ok) {
         console.error("get session events request failed:", response.status, response.statusText)
         return []
@@ -19,7 +19,7 @@ export const getSessionEvents = async (sessionId) => {
 }
 
 export const getHeatmapData = async(url) => {
-    const response = await fetch(`${API_URL}/heatmap?url=${encodeURIComponent(url)}`)
+    const response = await fetch(`${API_URL}/heatmap?url=${encodeURIComponent(url)}`, {cache: "no-store"})
     if (!response.ok) {
         console.error("get heatmap data request failed:", response.status, response.statusText)
         return []
@@ -28,7 +28,7 @@ export const getHeatmapData = async(url) => {
 }
 
 export const getUrls = async () => {
-    const response = await fetch(`${API_URL}/urls`)
+    const response = await fetch(`${API_URL}/urls`, {cache: "no-store"})
     if (!response.ok) {
         console.error("get urls request failed:", response.status, response.statusText)
         return []
